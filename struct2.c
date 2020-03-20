@@ -10,7 +10,7 @@ int main()
     struct person *personPtr, person1;
     personPtr = &person1;
 
-    printf("Enter age: ");
+    printf("Enter_age: ");
     scanf("%d", &personPtr->age);
 
     printf("Enter weight: ");
