@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include<pthread.h>
+
+void *hello (void *arg)
+{
+printf("hello pthread \n");
+return 0;
+}
+
+int main(void)
+{
+	int i;
+	pthread_t tid[4];
+	for(i=0;i<4;i++)
+	{
+		pthread_create(&tid[i],NULL,hello,NULL);
+
+	}
+	for(i=0;i<4;i++)
+		{
+			pthread_join(&tid[i],NULL);
+
+		}
+return 0;
+
+}
