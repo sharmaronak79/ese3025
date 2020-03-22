@@ -16,7 +16,7 @@ int main()
     printf("Enter weight: ");
     scanf("%f", &personPtr->weight);
 
-    printf("Displaying:\n");
+    printf(" Displaying:\n");
     printf("Age: %d\n", personPtr->age);
     printf("weight: %f", personPtr->weight);
 
