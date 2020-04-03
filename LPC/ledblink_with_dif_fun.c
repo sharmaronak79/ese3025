@@ -1,0 +1,100 @@
+#include "board.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+#define LED_ON  0
+#define LED_OFF 1
+
+int RED_LED=0;
+int GREEN_LED=1;
+int BLUE_LED=2;
+
+/* Sets up system hardware */
+static void prvSetupHardware(void)
+{
+SystemCoreClockUpdate();
+Board_Init();
+
+/* Initial LEDs state is off */
+Board_LED_Set(0, LED_OFF);
+Board_LED_Set(1, LED_OFF);
+Board_LED_Set(2, LED_OFF);
+}
+
+/* RED_LED toggle thread */
+static void vLED_Task1(void *pvParameters) {
+
+        int LED_Number= *(int*)pvParameters;
+        while (1) {
+
+Board_LED_Set(LED_Number,LED_ON);       // RED_LED on for 1 Second
+vTaskDelay(configTICK_RATE_HZ);
+
+Board_LED_Set(LED_Number,LED_OFF);      // RED_LED off for 3.5 Second
+vTaskDelay(3*configTICK_RATE_HZ+ configTICK_RATE_HZ/2);
+
+}
+}
+
+/* GREEN_LED toggle thread */
+static void vLED_Task2(void *pvParameters) {
+	int LED_Number= *(int*)pvParameters;
+	vTaskDelay(configTICK_RATE_HZ+configTICK_RATE_HZ/2);
+
+        while (1) {
+
+Board_LED_Set(LED_Number,LED_ON);       // GREEN_LED on for 1 Second
+vTaskDelay(configTICK_RATE_HZ);
+
+Board_LED_Set(LED_Number,LED_OFF);      // GREEN_LED off for 3.5 Second
+vTaskDelay(3*configTICK_RATE_HZ+ configTICK_RATE_HZ/2);
+
+}
+}
+
+/* BLUE_LED toggle thread */
+static void vLED_Task3(void *pvParameters) {
+	int LED_Number= *(int*)pvParameters;
+	vTaskDelay(3*configTICK_RATE_HZ);
+
+        while (1) {
+
+Board_LED_Set(LED_Number,LED_ON);       // BLUE_LED on for 1 Second
+vTaskDelay(configTICK_RATE_HZ);
+
+Board_LED_Set(LED_Number,LED_OFF);      // BLUE_LED off for 3.5 Second
+vTaskDelay(3*configTICK_RATE_HZ+ configTICK_RATE_HZ/2);
+
+}
+}
+
+/*****************************************************************************
+ * Public functions
+ ****************************************************************************/
+
+int main(void)
+{
+prvSetupHardware();
+
+
+
+/* RED toggle thread */
+xTaskCreate(vLED_Task1, (signed char *) "vTaskLed1",
+configMINIMAL_STACK_SIZE, (void*)&RED_LED, (tskIDLE_PRIORITY + 3UL),
+(xTaskHandle *) NULL);
+
+/* GREEN toggle thread */
+xTaskCreate(vLED_Task2, (signed char *) "vTaskLed2",
+configMINIMAL_STACK_SIZE, (void*)&GREEN_LED, (tskIDLE_PRIORITY + 2UL),
+(xTaskHandle *) NULL);
+/* BLUE toggle thread */
+xTaskCreate(vLED_Task3, (signed char *) "vTaskLed3",
+configMINIMAL_STACK_SIZE, (void*)&BLUE_LED, (tskIDLE_PRIORITY + 1UL),
+(xTaskHandle *) NULL);
+
+/* Start the scheduler */
+vTaskStartScheduler();
+
+/* Should never arrive here */
+return 1;
+}
