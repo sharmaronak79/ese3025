@@ -22,7 +22,7 @@ Board_LED_Set(2, LED_OFF);
 }
 
 /* RED_LED toggle thread */
-static void vLED_Task1(void *pvParameters) {
+static void RED_Task1(void *pvParameters) {
 
         int LED_Number= *(int*)pvParameters;
         while (1) {
@@ -37,7 +37,7 @@ vTaskDelay(3*configTICK_RATE_HZ+ configTICK_RATE_HZ/2);
 }
 
 /* GREEN_LED toggle thread */
-static void vLED_Task2(void *pvParameters) {
+static void GREEN_Task2(void *pvParameters) {
 	int LED_Number= *(int*)pvParameters;
 	vTaskDelay(configTICK_RATE_HZ+configTICK_RATE_HZ/2);
 
@@ -53,7 +53,7 @@ vTaskDelay(3*configTICK_RATE_HZ+ configTICK_RATE_HZ/2);
 }
 
 /* BLUE_LED toggle thread */
-static void vLED_Task3(void *pvParameters) {
+static void BLUE_Task3(void *pvParameters) {
 	int LED_Number= *(int*)pvParameters;
 	vTaskDelay(3*configTICK_RATE_HZ);
 
@@ -79,16 +79,16 @@ prvSetupHardware();
 
 
 /* RED toggle thread */
-xTaskCreate(vLED_Task1, (signed char *) "vTaskLed1",
+xTaskCreate(RED_Task1, (signed char *) "RED",
 configMINIMAL_STACK_SIZE, (void*)&RED_LED, (tskIDLE_PRIORITY + 3UL),
 (xTaskHandle *) NULL);
 
 /* GREEN toggle thread */
-xTaskCreate(vLED_Task2, (signed char *) "vTaskLed2",
+xTaskCreate(GREEN_Task2, (signed char *) "GREEN",
 configMINIMAL_STACK_SIZE, (void*)&GREEN_LED, (tskIDLE_PRIORITY + 2UL),
 (xTaskHandle *) NULL);
 /* BLUE toggle thread */
-xTaskCreate(vLED_Task3, (signed char *) "vTaskLed3",
+xTaskCreate(BLUE_Task3, (signed char *) "BLUE",
 configMINIMAL_STACK_SIZE, (void*)&BLUE_LED, (tskIDLE_PRIORITY + 1UL),
 (xTaskHandle *) NULL);
 
